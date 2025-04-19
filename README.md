@@ -1,6 +1,6 @@
 # Guests
 
-An effective way to limit player access, minimizing the risk of your SMP being greifed.
+An effective way to limit player access, minimizing the risk of your SMP being griefed.
 
 [Documentation](https://thunderx-1.gitbook.io/guests) | [SpigotMC](https://www.spigotmc.org/resources/guests.124230)
 
