@@ -5,7 +5,7 @@
 #╚██████╔╝╚██████╔╝███████╗██████╔╝░░░██║░░░██████╔╝
 #░╚═════╝░░╚═════╝░╚══════╝╚═════╝░░░░╚═╝░░░╚═════╝░
 #
-# Current version: 1.1.0a
+# Current version: 1.1.1a
 # Made by _thunderx__
 # Please note Guests requires the whitelist to be enabled. However, Guests enables the whitelist automatically each time
 # the addon is loaded or the server starts up.
@@ -35,7 +35,7 @@ command /guests [<text>]:
             send "{@prefix} &7/addguest <player>" to player
             send "{@prefix} &7/removeguest <player>" to player
         else if arg is "info":
-            send "{@prefix} &bGuests Addon v1.1.0a"
+            send "{@prefix} &bGuests Addon v1.1.1aa"
             send "{@prefix} &bFind it on GitHub and SpigotMC"
             send "{@prefix} &7Created by _thunderx__"
         else:
