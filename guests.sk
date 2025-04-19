@@ -5,14 +5,16 @@
 #╚██████╔╝╚██████╔╝███████╗██████╔╝░░░██║░░░██████╔╝
 #░╚═════╝░░╚═════╝░╚══════╝╚═════╝░░░░╚═╝░░░╚═════╝░
 #
-# Current version: 1.0.0
+# Current version: 1.1.0a
 # Made by _thunderx__
 # Please note Guests requires the whitelist to be enabled. However, Guests enables the whitelist automatically each time
 # the addon is loaded or the server starts up.
+#
+# Documentation: https://thunderx-1.gitbook.io/guests
 
 options:
     prefix: &b[&3G&bu&3e&bs&3t&bs&3]
-    allow-commands: /msg, /help, /spawn
+    allow-commands: /msg, /help, /spawn # This does nothing at this time!
     block-interaction-message: &cYou are not allowed to do that as a guest!
     whitelist-mode: true
     notify-on-guest-join: true
@@ -33,7 +35,8 @@ command /guests [<text>]:
             send "{@prefix} &7/addguest <player>" to player
             send "{@prefix} &7/removeguest <player>" to player
         else if arg is "info":
-            send "{@prefix} &bGuests Addon v1.0.0"
+            send "{@prefix} &bGuests Addon v1.1.0a"
+            send "{@prefix} &bFind it on GitHub and SpigotMC"
             send "{@prefix} &7Created by _thunderx__"
         else:
             send "{@prefix} &bUse &e/guests help &bfor help."
@@ -41,9 +44,12 @@ command /guests [<text>]:
 command /addguest <offline player>:
     permission: guests.add
     trigger:
-        set {guest::%uuid of arg-1%} to true
-        execute console command "whitelist add %arg-1%"
-        send "{@prefix} &a%arg-1% added as a guest." to player
+        if arg-1 is not player:
+            set {guest::%uuid of arg-1%} to true
+            execute console command "whitelist add %arg-1%"
+            send "{@prefix} &a%arg-1% added as a guest." to player
+        else:
+            send "{@prefix} &cYou can't set yourself as the guest!" to player
 
 command /removeguest <offline player>:
     permission: guests.remove
