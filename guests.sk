@@ -1,0 +1,111 @@
+#░██████╗░██╗░░░██╗███████╗░██████╗████████╗░██████╗
+#██╔════╝░██║░░░██║██╔════╝██╔════╝╚══██╔══╝██╔════╝
+#██║░░██╗░██║░░░██║█████╗░░╚█████╗░░░░██║░░░╚█████╗░
+#██║░░╚██╗██║░░░██║██╔══╝░░░╚═══██╗░░░██║░░░░╚═══██╗
+#╚██████╔╝╚██████╔╝███████╗██████╔╝░░░██║░░░██████╔╝
+#░╚═════╝░░╚═════╝░╚══════╝╚═════╝░░░░╚═╝░░░╚═════╝░
+#
+# Current version: 1.0.0
+# Made by _thunderx__
+# Please note Guests requires the whitelist to be enabled. However, Guests enables the whitelist automatically each time
+# the addon is loaded or the server starts up.
+
+options:
+    prefix: &b[&3G&bu&3e&bs&3t&bs&3]
+    allow-commands: /msg, /help, /spawn
+    block-interaction-message: &cYou are not allowed to do that as a guest!
+    whitelist-mode: true
+    notify-on-guest-join: true
+
+on load:
+    if {@whitelist-mode} is true:
+        send "{@prefix} &r&bEnabling the whitelist..." to console
+        execute console command "whitelist on"
+
+# Guest management commands
+command /guests [<text>]:
+    trigger:
+        if arg is "help":
+            send "{@prefix} &bAvailable commands:" to player
+            send "{@prefix} &b/guests help &7- Show help menu" to player
+            send "{@prefix} &b/guests info &7- Info about this addon" to player
+            send "{@prefix} &bAdmin commands:" to player
+            send "{@prefix} &7/addguest <player>" to player
+            send "{@prefix} &7/removeguest <player>" to player
+        else if arg is "info":
+            send "{@prefix} &bGuests Addon v1.0.0"
+            send "{@prefix} &7Created by _thunderx__"
+        else:
+            send "{@prefix} &bUse &e/guests help &bfor help."
+
+command /addguest <offline player>:
+    permission: guests.add
+    trigger:
+        set {guest::%uuid of arg-1%} to true
+        execute console command "whitelist add %arg-1%"
+        send "{@prefix} &a%arg-1% added as a guest." to player
+
+command /removeguest <offline player>:
+    permission: guests.remove
+    trigger:
+        delete {guest::%uuid of arg-1%}
+        execute console command "whitelist remove %arg-1%"
+        kick arg-1
+        send "{@prefix} &c%arg-1% removed from guests." to player
+
+# Join notify
+on join:
+    if {guest::%uuid of player%} is set:
+        if {@notify-on-guest-join} is true:
+            broadcast "{@prefix} &eGuest &6%player% &ehas joined the server."
+
+# Guest Restrictions
+
+# Block break
+on break:
+    if {guest::%uuid of player%} is set:
+        cancel event
+        send "{@prefix} &r{@block-interaction-message}" to player
+
+# Block place
+on place:
+    if {guest::%uuid of player%} is set:
+        cancel event
+        send "{@prefix} &r{@block-interaction-message}" to player
+
+# Drop items
+on drop:
+    if {guest::%uuid of player%} is set:
+        cancel event
+        send "{@prefix} &r{@block-interaction-message}" to player
+
+# Pickup items
+on pickup:
+    if {guest::%uuid of player%} is set:
+        cancel event
+
+# Prevent command usage
+on command:
+    if {guest::%uuid of player%} is set:
+        set {_cmd} to command
+        if {_cmd} starts with "/msg":
+            stop
+        if {_cmd} starts with "/help":
+            stop
+        if {_cmd} starts with "/spawn":
+            stop
+        cancel event
+        send "{@prefix} &r{@block-interaction-message}" to player
+
+            
+# Prevent guests from damaging entities
+on damage:
+    if attacker is a player:
+        if {guest::%uuid of attacker%} is set:
+            cancel event
+            send "{@prefix} &r{@block-interaction-message}" to attacker
+            
+on damage:
+    if victim is a player:
+        if {guest::%uuid of victim%} is set:
+            cancel event
